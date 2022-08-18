@@ -25,10 +25,10 @@ const LoginForm = ({ setUser, setAppSnackbarOpen, setAppSnackbarText }) => {
   const [usernameErrorText, setUsernameErrorText] = useState("");
   const [passwordErrorText, setPasswordErrorText] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState("");
   const [resetUser, setResetUser] = useState("");
   const [open, setOpen] = useState(false);
-  const [id, setId] = useState(null)
+  const [id, setId] = useState(null);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -86,15 +86,13 @@ const LoginForm = ({ setUser, setAppSnackbarOpen, setAppSnackbarText }) => {
 
     AuthService.login(request)
       .then((response) => {
-       
-          console.log("Signed in successfully");
-          setUsername("");
-          setPassword("");
-          setUser(response.user);
-          navigate("/adverts");
-          setAppSnackbarText("Signed in successfully");
-          setAppSnackbarOpen(true);
-        
+        console.log("Signed in successfully");
+        setUsername("");
+        setPassword("");
+        setUser(response.user);
+        navigate("/adverts");
+        setAppSnackbarText("Signed in successfully");
+        setAppSnackbarOpen(true);
       })
       .catch((err) => {
         console.log(err);
@@ -108,12 +106,11 @@ const LoginForm = ({ setUser, setAppSnackbarOpen, setAppSnackbarText }) => {
     <>
       <Container maxWidth='xs'>
         <Stack spacing={2} padding={2}>
-        <img alt='logo' src='/baby-stroller.png' />
+          <img alt='logo' src='logo512primary.png' />
         </Stack>
         {
           <form onSubmit={onSubmit}>
             <Stack spacing={2} padding={2}>
-
               <TextField
                 required
                 label='Username'

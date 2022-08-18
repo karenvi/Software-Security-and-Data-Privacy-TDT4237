@@ -14,7 +14,7 @@ import Home from "./components/Home";
 import SignupForm from "./components/SignupForm";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
 });
 
 const App = () => {
@@ -46,43 +46,43 @@ const App = () => {
 
   return (
     <Router>
-      <AppBar position="static">
+      <AppBar position='static'>
         <Toolbar>
           <Grid container>
             <Grid item>
-              <Button size="small" component={Link} to="/">
-                <Avatar alt="Home" src="favicon.ico" />
+              <Button size='small' component={Link} to='/'>
+                <Avatar alt='Home' src='favicon.ico' />
               </Button>
             </Grid>
             {user ? (
               <Grid item>
-                <Button color="inherit" component={Link} to="/offers">
+                <Button color='inherit' component={Link} to='/offers'>
                   offers
                 </Button>
               </Grid>
             ) : null}
           </Grid>
-          <Grid container justifyContent="flex-end">
+          <Grid container justifyContent='flex-end'>
             <Grid item>
               {user ? (
                 <Button
-                  color="inherit"
+                  color='inherit'
                   onClick={signOut}
                   component={Link}
-                  to="/login"
+                  to='/login'
                 >
                   Sign Out
                 </Button>
               ) : (
                 <div>
-                  <Button color="inherit" component={Link} to="/login">
+                  <Button color='inherit' component={Link} to='/login'>
                     Sign In
                   </Button>
                   <Button
-                    variant="outlined"
-                    color="inherit"
+                    variant='outlined'
+                    color='inherit'
                     component={Link}
-                    to="/signup"
+                    to='/signup'
                   >
                     Sign up
                   </Button>
@@ -92,10 +92,10 @@ const App = () => {
           </Grid>
         </Toolbar>
       </AppBar>
-      <Container maxWidth="md">
+      <Container maxWidth='md'>
         <Routes>
           <Route
-            path="login"
+            path='login'
             element={
               <LoginForm
                 setAppSnackbarOpen={setSnackbarOpen}
@@ -106,17 +106,16 @@ const App = () => {
           />
 
           <Route
-            path="/signup"
+            path='/signup'
             element={
               <SignupForm
                 setAppSnackbarOpen={setSnackbarOpen}
                 setAppSnackbarText={setSnackbarText}
-                setUser={setUser}
               />
             }
           />
 
-          <Route path="/" element={<Home setUser={setUser} />} />
+          <Route path='/' element={<Home setUser={setUser} />} />
         </Routes>
         <Snackbar
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
@@ -126,7 +125,7 @@ const App = () => {
         >
           <Alert
             onClose={handleClose}
-            severity="success"
+            severity='success'
             sx={{ width: "100%" }}
           >
             {snackbarText}

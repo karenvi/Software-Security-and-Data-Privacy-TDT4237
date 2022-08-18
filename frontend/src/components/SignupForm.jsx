@@ -8,26 +8,34 @@ import AuthService from "../services/auth";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import Link from "@mui/material/Link";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
 });
 
-const SignupForm = ({ setUser, setAppSnackbarOpen, setAppSnackbarText }) => {
+const SignupForm = ({ setAppSnackbarOpen, setAppSnackbarText }) => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [usernameErrorText, setUsernameErrorText] = useState("");
-  const [passwordErrorText, setPasswordErrorText] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarText, setSnackbarText] = useState("");
+  const [accountType, setAccountType] = React.useState("volunteer");
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
     setSnackbarOpen(false);
+  };
+
+  const handleChangeAccountType = (event) => {
+    setAccountType(event.target.value);
   };
 
   const onSubmit = (e) => {
@@ -62,14 +70,36 @@ const SignupForm = ({ setUser, setAppSnackbarOpen, setAppSnackbarText }) => {
       <Container maxWidth='xs'>
         <form onSubmit={onSubmit}>
           <Stack spacing={2} padding={2}>
-            <img alt='logo' src='' />
+            <img alt='logo' src='logo512primary.png' />
+
+            <FormControl>
+              <FormLabel id='row-radio-buttons-group-label'>
+                Account type
+              </FormLabel>
+              <RadioGroup
+                row
+                aria-labelledby='demo-row-radio-buttons-group-label'
+                name='row-radio-buttons-group'
+                value={accountType}
+                onChange={handleChangeAccountType}
+              >
+                <FormControlLabel
+                  value='volunteer'
+                  control={<Radio />}
+                  label='Volunteer'
+                />
+                <FormControlLabel
+                  value='refugee'
+                  control={<Radio />}
+                  label='Refugee'
+                />
+              </RadioGroup>
+            </FormControl>
             <TextField
               required
               label='Username'
               onInput={(e) => setUsername(e.target.value)}
               value={username}
-              error={!!usernameErrorText}
-              helperText={usernameErrorText}
             />
             <TextField
               required
@@ -85,8 +115,6 @@ const SignupForm = ({ setUser, setAppSnackbarOpen, setAppSnackbarText }) => {
               type='password'
               onInput={(e) => setPassword(e.target.value)}
               value={password}
-              error={!!passwordErrorText}
-              helperText={passwordErrorText}
             ></TextField>
             <Button variant='contained' type='submit'>
               Sign Up

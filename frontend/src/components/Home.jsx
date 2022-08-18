@@ -12,38 +12,39 @@ const Home = ({ setUser }) => {
     const loggedUserJSON = window.localStorage.getItem("user");
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
-      setUser(user)
+      setUser(user);
       navigate("/adverts");
     }
   }, []);
 
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth='xl'>
       <Stack
         spacing={2}
         padding={2}
-        justifyContent="center"
-        alignItems="center"
+        justifyContent='center'
+        alignItems='center'
       >
-        <Typography sx={{ textAlign: "center" }} variant="h4">
-          Welcome to SecureHelp, the best application for securely managing voluntary work.
+        <Typography sx={{ textAlign: "center" }} variant='h4'>
+          Welcome to SecureHelp, the best application for securely managing
+          voluntary work.
         </Typography>
         <img
-          alt="logo"
-          align="center"
-          src=""
-          width="300"
-          height="300"
+          alt='logo'
+          align='center'
+          src='logo512primary.png'
+          width='300'
+          height='300'
         />
-        <Typography sx={{ textAlign: "center" }} variant="body">
-          Register for voluntary work here!
+        <Typography sx={{ textAlign: "center" }} variant='body'>
+          Register for voluntary work or as a refugee here!
         </Typography>
-        <Button onClick={() => navigate("/signup")} variant="contained">
+        <Button onClick={() => navigate("/signup")} variant='contained'>
           Click here to sign up
         </Button>
         <Link
-          component="button"
-          underline="hover"
+          component='button'
+          underline='hover'
           onClick={() => navigate("/login")}
         >
           Already registered? Click here to sign in!
