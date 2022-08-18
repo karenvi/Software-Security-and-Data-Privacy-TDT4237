@@ -6,11 +6,11 @@ Security application for TDT4237 Spring 2023
 
 The following must be installed before running this application.
 
-- [Git](https://git-scm.com/downloads/) 
+- [Git](https://git-scm.com/downloads/)
 - [Docker Desktop](https://docs.docker.com/engine/install/) - Deployment
 - [Python >= 3.9](https://www.python.org/) - Development
-- [Node >= 14](https://nodejs.org/en/) - Development
-- [VPN](https://i.ntnu.no/wiki/-/wiki/English/Install+VPN) - Connection to NTNU servers 
+- [Node >= 16](https://nodejs.org/en/) - Development
+- [VPN](https://i.ntnu.no/wiki/-/wiki/English/Install+VPN) - Connection to NTNU servers
 
 ### Alternative 1: Clone with personal access tokens
 
@@ -72,7 +72,7 @@ The instance will be running at http://localhost:3000/ and code changes should u
 
 ## Deployment
 
-The following sections describe how to run the application with Docker and Gitlab Runner. We are using Docker to prevent issues with different versions and platforms, effectively "it runs on my computer" (but only there), should not be an issue. Your application will always be evaluated when being deployed by Docker. 
+The following sections describe how to run the application with Docker and Gitlab Runner. We are using Docker to prevent issues with different versions and platforms, effectively "it runs on my computer" (but only there), should not be an issue. Your application will always be evaluated when being deployed by Docker.
 
 ### Docker
 
