@@ -25,7 +25,6 @@ DOMAIN = os.environ.get("DOMAIN", "localhost")
 PROTOCOL = os.environ.get("PROTOCOL", "http")
 
 
-
 # Set the URL used for redirecting
 # URL in local development will not find environment variables and looks like: 'http://localhost:3000' (redirect to node)
 # URL in local production with docker can look like this: 'http://localhost:21190', where 190 is the GROUP_ID
@@ -80,7 +79,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
-    'apps.users'
+    'apps.users',
+    'apps.certifications',
+    'apps.help_requests'
 ]
 
 MIDDLEWARE = [
@@ -125,9 +126,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-
-
 
 
 # Internationalization
