@@ -6,4 +6,5 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    mfa_active = models.BooleanField(default=False, blank=True)
+    # Is the user a volunteer or a refugee
+    is_volunteer = models.BooleanField(default=False)

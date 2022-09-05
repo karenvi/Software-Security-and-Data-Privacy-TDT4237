@@ -41,7 +41,13 @@ const SignupForm = ({ setAppSnackbarOpen, setAppSnackbarText }) => {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    const request = { username: username, email: email, password: password };
+    const is_volunteer = accountType === "volunteer";
+    const request = {
+      username: username,
+      email: email,
+      password: password,
+      is_volunteer: is_volunteer,
+    };
     AuthService.createUser(request)
       .then((response) => {
         console.log("User registered successfully");
