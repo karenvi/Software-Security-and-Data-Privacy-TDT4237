@@ -12,5 +12,7 @@ router.register('api/certifications',
 urlpatterns = [
     path('api/certifications/answer/', views.AnswerCertificationRequest.as_view(),
          name='answer-certification-request'),
-    *router.urls,
+    path('api/certifications/status/',
+         views.GetCertificationStatus.as_view(), name='get-certification-status'),
+    * router.urls,
 ]

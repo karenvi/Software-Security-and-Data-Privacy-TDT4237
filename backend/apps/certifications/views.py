@@ -2,7 +2,7 @@ from django.db.utils import IntegrityError
 from rest_framework import permissions, viewsets, generics, status
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
-from .models import CertificationRequest, Status
+from .models import CertificationRequest, Status, Competence
 from .serializers import CertificationRequestSerializer
 from .permissions import IsVolunteer
 # Create your views here.
@@ -55,3 +55,31 @@ class AnswerCertificationRequest(generics.GenericAPIView):
             return Response({'error': 'Status must be A or D'}, status=status.HTTP_400_BAD_REQUEST)
         certification_request.save()
         return Response(status=status.HTTP_200_OK)
+
+
+class GetCertificationStatus(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        result = []
+        for s in Competence:
+
+            certification_request = CertificationRequest.objects.filter(
+                user=self.request.user, competence=s).first()
+            if certification_request:
+                result.append({
+                    'competence': s,
+                    'status': certification_request.status,
+                    'created': certification_request.created,
+                    'id': certification_request.id
+                })
+            else:
+
+                result.append({
+                    'competence': s,
+                    'status': None,
+                    'created': None,
+                    'id': None
+                })
+
+        return Response(result, status=status.HTTP_200_OK)
