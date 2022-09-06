@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth import get_user_model
 # Create your models here.
 
 
@@ -10,13 +10,23 @@ class Competence(models.TextChoices):  # enum for competences
     SHELTER = 'SHELTER'
 
 
+class Status(models.TextChoices):
+    ACCEPTED = 'A'
+    DECLINED = 'D'
+    PENDING = 'P'
+
+
 class CertificationRequest(models.Model):
     """Model for certification requests"""
-    user = models.ForeignKey('users.User', on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     competence = models.CharField(max_length=20, choices=Competence.choices)
-    status = models.CharField(max_length=20, choices=Competence.choices)
-    date = models.DateField(auto_now_add=True)
-    comment = models.CharField(max_length=200, blank=True)
+    status = models.CharField(
+        max_length=1, choices=Status.choices, default=Status.PENDING)
+    created = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return self.user.username
+    class Meta:
+        ordering = ['created']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'competence'], name='unique_certification')
+        ]
