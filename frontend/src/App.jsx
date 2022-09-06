@@ -12,6 +12,7 @@ import AuthService from "./services/token";
 import LoginForm from "./components/LoginForm";
 import Home from "./components/Home";
 import SignupForm from "./components/SignupForm";
+import Certifications from "./components/Certifications";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
@@ -56,8 +57,8 @@ const App = () => {
             </Grid>
             {user ? (
               <Grid item>
-                <Button color='inherit' component={Link} to='/offers'>
-                  offers
+                <Button color='inherit' component={Link} to='/certifications'>
+                  Certifications
                 </Button>
               </Grid>
             ) : null}
@@ -94,6 +95,11 @@ const App = () => {
       </AppBar>
       <Container maxWidth='md'>
         <Routes>
+          <Route
+            path='/certifications'
+            element={<Certifications user={user} />}
+          />
+
           <Route
             path='login'
             element={

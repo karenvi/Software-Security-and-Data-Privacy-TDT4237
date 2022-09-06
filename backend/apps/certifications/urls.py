@@ -9,7 +9,8 @@ router.register('api/certifications',
                 views.CertificationRequestViewSet, basename='certifications')
 
 
-urlpatterns = [*router.urls,
-               path('api/certifications/answer', views.AnswerCertificationRequest.as_view(),
-                    name='answer-certification-request'),
-               ]
+urlpatterns = [
+    path('api/certifications/answer/', views.AnswerCertificationRequest.as_view(),
+         name='answer-certification-request'),
+    *router.urls,
+]
