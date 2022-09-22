@@ -20,11 +20,17 @@ const AnswerCertificationRequest = (data) => {
   return request.then((response) => response.data);
 };
 
+const GetCertificationStatus = () => {
+  const request = api.get("/certifications/status/");
+  return request.then((response) => response.data);
+};
+
 const CertificationsService = {
   GetCertificationRequests,
   DeleteCertificationRequest,
   CreateCertificationRequest,
   AnswerCertificationRequest,
+  GetCertificationStatus,
 };
 
 export default CertificationsService;

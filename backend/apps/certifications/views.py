@@ -61,25 +61,24 @@ class GetCertificationStatus(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        result = []
+        result = {}
         for s in Competence:
 
             certification_request = CertificationRequest.objects.filter(
                 user=self.request.user, competence=s).first()
             if certification_request:
-                result.append({
-                    'competence': s,
+                body = {
                     'status': certification_request.status,
                     'created': certification_request.created,
                     'id': certification_request.id
-                })
+                }
             else:
 
-                result.append({
-                    'competence': s,
+                body = {
                     'status': None,
                     'created': None,
                     'id': None
-                })
+                }
+            result[s] = body
 
         return Response(result, status=status.HTTP_200_OK)

@@ -4,6 +4,19 @@ import Certification from "./Certification";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 const Certifications = ({ user }) => {
+  const [certifications, setCertifications] = useState(null);
+
+  useEffect(() => {
+    CertificationsService.GetCertificationStatus()
+      .then((response) => {
+        setCertifications(response);
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   return (
     <>
       <Typography sx={{ textAlign: "center", marginTop: 3 }} variant='h2'>
@@ -17,38 +30,55 @@ const Certifications = ({ user }) => {
         View your certifications and apply for more here!
       </Typography>
       <Grid marginTop={1} container spacing={5} justifyContent='center'>
-        <Grid key={0} item xs={12} md={6}>
+        <Grid
+          key={"Medical" + certifications?.MEDICAL.status} // Force key change when status changes to rerender
+          item
+          xs={12}
+          md={6}
+        >
           <Certification
             serviceType='Medical'
-            initialStatus='P'
+            initialStatus={certifications?.MEDICAL.status}
             imagePath='logo512primary.png'
-            date=''
-            id={3}
+            id={certifications?.MEDICAL.id}
           />
         </Grid>
 
-        <Grid key={1} item xs={12} md={6}>
+        <Grid
+          key={"Transport" + certifications?.TRANSPORT.status}
+          item
+          xs={12}
+          md={6}
+        >
           <Certification
             serviceType='Transport'
-            initialStatus='A'
+            initialStatus={certifications?.TRANSPORT.status}
             imagePath='logo512primary.png'
             date=''
+            id={certifications?.TRANSPORT.id}
           />
         </Grid>
-        <Grid key={2} item xs={12} md={6}>
+        <Grid key={"Food" + certifications?.FOOD.status} item xs={12} md={6}>
           <Certification
             serviceType='Food'
-            initialStatus='D'
+            initialStatus={certifications?.FOOD.status}
             imagePath='logo512primary.png'
             date=''
+            id={certifications?.FOOD.id}
           />
         </Grid>
-        <Grid key={3} item xs={12} md={6}>
+        <Grid
+          key={"Shelter" + certifications?.SHELTER.status}
+          item
+          xs={12}
+          md={6}
+        >
           <Certification
             serviceType='Shelter'
-            initialStatus={null}
+            initialStatus={certifications?.SHELTER.status}
             imagePath='logo512primary.png'
             date=''
+            id={certifications?.SHELTER.id}
           />
         </Grid>
       </Grid>
