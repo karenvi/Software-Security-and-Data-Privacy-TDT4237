@@ -30,3 +30,7 @@ class CertificationRequest(models.Model):
             models.UniqueConstraint(
                 fields=['user', 'competence'], name='unique_certification')
         ]
+
+    @staticmethod
+    def IsCertified(user, competence):
+        return CertificationRequest.objects.filter(user=user, status=Status.ACCEPTED, competence=competence).exists()
