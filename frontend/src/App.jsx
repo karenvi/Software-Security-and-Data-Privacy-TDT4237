@@ -57,14 +57,14 @@ const App = () => {
               </Button>
             </Grid>
             {user?.is_volunteer || user?.is_staff ? (
-              <Grid item>
+              <Grid item marginTop={0.8}>
                 <Button color='inherit' component={Link} to='/certifications'>
                   Certifications
                 </Button>
               </Grid>
             ) : null}
             {user?.is_staff ? (
-              <Grid item>
+              <Grid item marginTop={0.8}>
                 <Button
                   color='inherit'
                   component={Link}
