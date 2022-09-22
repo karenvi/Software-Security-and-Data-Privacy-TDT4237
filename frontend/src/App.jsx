@@ -13,6 +13,7 @@ import LoginForm from "./components/LoginForm";
 import Home from "./components/Home";
 import SignupForm from "./components/SignupForm";
 import Certifications from "./components/Certifications";
+import ApproveCerts from "./components/ApproveCerts";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
@@ -55,10 +56,21 @@ const App = () => {
                 <Avatar alt='Home' src='favicon.ico' />
               </Button>
             </Grid>
-            {user ? (
+            {user?.is_volunteer || user?.is_staff ? (
               <Grid item>
                 <Button color='inherit' component={Link} to='/certifications'>
                   Certifications
+                </Button>
+              </Grid>
+            ) : null}
+            {user?.is_staff ? (
+              <Grid item>
+                <Button
+                  color='inherit'
+                  component={Link}
+                  to='/approve-certifications'
+                >
+                  Certification Requests
                 </Button>
               </Grid>
             ) : null}
@@ -93,12 +105,13 @@ const App = () => {
           </Grid>
         </Toolbar>
       </AppBar>
-      <Container maxWidth='md'>
+      <Container maxWidth='xl'>
         <Routes>
           <Route
             path='/certifications'
             element={<Certifications user={user} />}
           />
+          <Route path='/approve-certifications' element={<ApproveCerts />} />
 
           <Route
             path='login'

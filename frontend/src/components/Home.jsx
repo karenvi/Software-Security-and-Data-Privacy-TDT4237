@@ -13,7 +13,7 @@ const Home = ({ setUser }) => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
       setUser(user);
-      navigate("/adverts");
+      navigate("/certifications");
     }
   }, []);
 

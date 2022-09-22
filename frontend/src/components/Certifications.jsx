@@ -3,6 +3,7 @@ import CertificationsService from "../services/certifications";
 import Certification from "./Certification";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
+import { Container } from "@mui/material";
 const Certifications = ({ user }) => {
   const [certifications, setCertifications] = useState(null);
 
@@ -17,7 +18,7 @@ const Certifications = ({ user }) => {
   }, []);
 
   return (
-    <>
+    <Container maxWidth='md'>
       <Typography sx={{ textAlign: "center", marginTop: 3 }} variant='h2'>
         Certifications
       </Typography>
@@ -81,7 +82,7 @@ const Certifications = ({ user }) => {
           />
         </Grid>
       </Grid>
-    </>
+    </Container>
   );
 };
 
