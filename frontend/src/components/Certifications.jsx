@@ -10,7 +10,6 @@ const Certifications = ({ user }) => {
     CertificationsService.GetCertificationStatus()
       .then((response) => {
         setCertifications(response);
-        console.log(response);
       })
       .catch((error) => {
         console.log(error);
