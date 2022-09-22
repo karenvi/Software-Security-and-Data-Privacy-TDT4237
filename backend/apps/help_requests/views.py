@@ -1,6 +1,5 @@
 import base64
 import pickle
-from django.shortcuts import render
 from django.db.models import Q
 from rest_framework import permissions, viewsets, generics, status
 from rest_framework.exceptions import ValidationError
@@ -16,6 +15,7 @@ class HelpRequestViewSet(viewsets.ModelViewSet):
 
     serializer_class = HelpRequestSerializer
     permission_classes = [permissions.IsAuthenticated]
+    http_method_names = ['get', 'head', 'delete', 'post']
 
     def get_queryset(self):
 
@@ -29,8 +29,8 @@ class HelpRequestViewSet(viewsets.ModelViewSet):
 
             return HelpRequest.objects.filter(service_type__in=approved).filter(Q(volunteer=None) | Q(volunteer=self.request.user)).distinct()
         else:
-            queryset = HelpRequest.objects.raw(
-                'SELECT * FROM help_requests_helprequest WHERE refugee_id = %s', [self.request.user.id])
+            queryset = HelpRequest.objects.filter(refugee=self.request.user)
+
         service_type = self.request.query_params.get('service_type', None)
         if service_type is not None:
             queryset = queryset.filter(service_type=service_type)
@@ -41,6 +41,11 @@ class HelpRequestViewSet(viewsets.ModelViewSet):
             raise ValidationError("Volunteers can't create help requests")
         serializer.save(refugee=self.request.user)
 
+    def perform_destroy(self, instance):
+        if self.request.user != instance.refugee:
+            raise ValidationError("Can only delete own help requests")
+        instance.delete()
+
 
 class AcceptHelpRequest(generics.GenericAPIView):
     permission_classes = [permissions.IsAdminUser | IsVolunteer]
@@ -50,11 +55,12 @@ class AcceptHelpRequest(generics.GenericAPIView):
         if not(request.data.get('request_id')):
             return Response({'error': 'id is required'}, status=status.HTTP_400_BAD_REQUEST)
 
-        rId = base64.b64decode(request.data.get('request_id'))
-        rId = pickle.loads(rId)
         # check if id is valid
         try:
-            help_request = HelpRequest.objects.get(id=rId)
+            rId = base64.b64decode(request.data.get('request_id'))
+            rId = pickle.loads(rId)
+            help_request = HelpRequest.objects.raw(
+                "SELECT * FROM help_requests_helprequest WHERE id = %s", [rId])[0]
         except:
             return Response({'error': 'Invalid id'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -64,7 +70,7 @@ class AcceptHelpRequest(generics.GenericAPIView):
         if help_request.volunteer is not None:  # check if help request is already taken
             return Response({'error': 'Help Request is already taken'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if help_request.finished:
+        if help_request.finished:  # check if help request is already finished
             return Response({'error': 'Help Request is already finished'}, status=status.HTTP_400_BAD_REQUEST)
 
         volunteer = self.request.user
@@ -92,10 +98,10 @@ class FinishHelpRequest(generics.GenericAPIView):
         if help_request is None:  # check if help request exists
             return Response({'error': 'Help Request does not exist'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if help_request.finished:
+        if help_request.finished:  # check if help request is already finished
             return Response({'error': 'Help Request is already finished'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if help_request.volunteer != self.request.user:  # check if help request is already taken
+        if help_request.volunteer != self.request.user:  # check if help request is not taken by you
             return Response({'error': 'Help Request is not taken by you'}, status=status.HTTP_400_BAD_REQUEST)
 
         help_request.finished = True

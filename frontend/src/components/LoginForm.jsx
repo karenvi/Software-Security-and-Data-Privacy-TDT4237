@@ -90,7 +90,7 @@ const LoginForm = ({ setUser, setAppSnackbarOpen, setAppSnackbarText }) => {
         setUsername("");
         setPassword("");
         setUser(response.user);
-        navigate("/certifications");
+        navigate("/help-requests");
         setAppSnackbarText("Signed in successfully");
         setAppSnackbarOpen(true);
       })

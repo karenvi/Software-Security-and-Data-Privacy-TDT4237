@@ -13,9 +13,9 @@ const Home = ({ setUser }) => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
       setUser(user);
-      navigate("/certifications");
+      navigate("/help-requests");
     }
-  }, []);
+  }, [navigate, setUser]);
 
   return (
     <Container maxWidth='xl'>
