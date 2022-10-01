@@ -63,7 +63,7 @@ const Certification = ({ serviceType, initialStatus, date, imagePath, id }) => {
           {status === "P" ? (
             <Button
               variant='contained'
-              color='error'
+              color='secondary'
               size='small'
               onClick={CancelCertificationRequest}
             >
@@ -74,7 +74,7 @@ const Certification = ({ serviceType, initialStatus, date, imagePath, id }) => {
           {status === "A" ? (
             <Button
               variant='contained'
-              color='error'
+              color='secondary'
               size='small'
               onClick={CancelCertificationRequest}
             >
@@ -85,7 +85,7 @@ const Certification = ({ serviceType, initialStatus, date, imagePath, id }) => {
           {status === null ? ( // status is null if the user has not applied for this certification
             <Button
               variant='contained'
-              color='success'
+              color='primary'
               size='small'
               onClick={ApplyForCertification}
             >

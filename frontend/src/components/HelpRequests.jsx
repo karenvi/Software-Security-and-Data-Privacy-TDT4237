@@ -4,11 +4,18 @@ import MuiAlert from "@mui/material/Alert";
 import React, { useState, useEffect } from "react";
 import HelpRequestService from "../services/helpRequests";
 import HelpRequest from "./HelpRequest";
+import NewHelpRequest from "./NewHelpRequest";
+import Modal from "@mui/material/Modal";
+
 const HelpRequests = ({ user }) => {
   const [requests, setRequests] = useState([]);
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarText, setSnackbarText] = useState("");
+
+  const [open, setOpen] = useState(false);
+  const handleModalOpen = () => setOpen(true);
+  const handleModalClose = () => setOpen(false);
 
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
@@ -49,7 +56,7 @@ const HelpRequests = ({ user }) => {
         variant='h5'
         color='text.secondary'
       >
-        Welcome to the Help request page! Manage help requests here.
+        Welcome to the Help Request page! Manage Help Requests here.
       </Typography>
 
       <Typography sx={{ textAlign: "center", marginTop: 3 }} variant='h4'>
@@ -114,11 +121,20 @@ const HelpRequests = ({ user }) => {
         variant='extended'
         color='primary'
         aria-label='add'
-        // onClick={handleOpen}
+        onClick={handleModalOpen}
       >
         New Request
         {<AddIcon sx={{ ml: 1 }} />}
       </Fab>
+
+      <Modal open={open} onClose={handleModalClose}>
+        <NewHelpRequest
+          OpenSnackbar={OpenSnackbar}
+          handleClose={handleModalClose}
+          setOpen={setOpen}
+          update={Update}
+        ></NewHelpRequest>
+      </Modal>
 
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}

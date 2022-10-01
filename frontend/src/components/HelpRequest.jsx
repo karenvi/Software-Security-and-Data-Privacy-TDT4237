@@ -63,12 +63,20 @@ const HelpRequest = ({ helpRequest, update, OpenSnackbar, user }) => {
           {helpRequest.service_type}
         </Typography>
 
-        <Typography variant='h6'>
-          Volunteer: {helpRequest.refugee}
-          {helpRequest.volunteer
-            ? "\nVolunteer: " + helpRequest.volunteer
-            : null}
-        </Typography>
+        <Typography variant='h6'>Refugee: {helpRequest.refugee}</Typography>
+
+        {helpRequest.volunteer ? (
+          <Typography variant='h6'>
+            {"Volunteer: " + helpRequest.volunteer}
+          </Typography>
+        ) : null}
+
+        {!helpRequest.finished &&
+        helpRequest.volunteer != null &&
+        user.is_volunteer ? (
+          <div>Show Refugee Documents (coming soon)</div>
+        ) : null}
+
         <div
           dangerouslySetInnerHTML={{ __html: helpRequest.description }}
         ></div>
