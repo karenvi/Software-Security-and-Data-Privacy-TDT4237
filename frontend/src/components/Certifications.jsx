@@ -7,7 +7,7 @@ import { Container } from "@mui/material";
 const Certifications = ({ user }) => {
   const [certifications, setCertifications] = useState(null);
 
-  useEffect(() => {
+  const Update = () => {
     CertificationsService.GetCertificationStatus()
       .then((response) => {
         setCertifications(response);
@@ -15,6 +15,10 @@ const Certifications = ({ user }) => {
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  useEffect(() => {
+    Update();
   }, []);
 
   return (
@@ -37,9 +41,10 @@ const Certifications = ({ user }) => {
           md={6}
         >
           <Certification
+            update={Update}
             serviceType='Medical'
             initialStatus={certifications?.MEDICAL.status}
-            imagePath='logo512primary.png'
+            imagePath='medical.png'
             id={certifications?.MEDICAL.id}
           />
         </Grid>
@@ -51,18 +56,20 @@ const Certifications = ({ user }) => {
           md={6}
         >
           <Certification
+            update={Update}
             serviceType='Transport'
             initialStatus={certifications?.TRANSPORT.status}
-            imagePath='logo512primary.png'
+            imagePath='transport.png'
             date=''
             id={certifications?.TRANSPORT.id}
           />
         </Grid>
         <Grid key={"Food" + certifications?.FOOD.status} item xs={12} md={6}>
           <Certification
+            update={Update}
             serviceType='Food'
             initialStatus={certifications?.FOOD.status}
-            imagePath='logo512primary.png'
+            imagePath='food.png'
             date=''
             id={certifications?.FOOD.id}
           />
@@ -74,9 +81,10 @@ const Certifications = ({ user }) => {
           md={6}
         >
           <Certification
+            update={Update}
             serviceType='Shelter'
             initialStatus={certifications?.SHELTER.status}
-            imagePath='logo512primary.png'
+            imagePath='shelter.png'
             date=''
             id={certifications?.SHELTER.id}
           />

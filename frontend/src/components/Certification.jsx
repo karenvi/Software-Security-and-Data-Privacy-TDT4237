@@ -8,7 +8,14 @@ import Typography from "@mui/material/Typography";
 import { Stack } from "@mui/material";
 import CertificationsService from "../services/certifications";
 
-const Certification = ({ serviceType, initialStatus, date, imagePath, id }) => {
+const Certification = ({
+  serviceType,
+  initialStatus,
+  date,
+  imagePath,
+  id,
+  update,
+}) => {
   const [status, setStatus] = useState(initialStatus);
   const ApplyForCertification = () => {
     const data = {
@@ -17,7 +24,7 @@ const Certification = ({ serviceType, initialStatus, date, imagePath, id }) => {
     CertificationsService.CreateCertificationRequest(data)
       .then((response) => {
         console.log("Certification request created successfully!");
-        setStatus("P");
+        update();
       })
       .catch((error) => {
         console.log(error);
@@ -40,7 +47,7 @@ const Certification = ({ serviceType, initialStatus, date, imagePath, id }) => {
       <CardMedia
         component='img'
         alt='illustration'
-        height='150'
+        height='230'
         image={imagePath}
       />
       <CardContent>
