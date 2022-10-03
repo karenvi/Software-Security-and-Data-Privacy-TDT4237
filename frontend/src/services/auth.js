@@ -25,7 +25,17 @@ const login = (credentials) => {
   });
 };
 
+const forgotPassword = (credentials) => {
+  const request = api.post("/request-reset-password/", credentials);
 
+  return request.then((response) => response.data);
+};
+
+const newPassword = (data) => {
+  const request = api.post(`/reset-password-validate/`, data);
+
+  return request.then((response) => response.data);
+};
 
 const logout = () => {
   TokenService.removeUser();
@@ -38,9 +48,10 @@ const getCurrentUser = () => {
 const AuthService = {
   createUser,
   login,
+  forgotPassword,
+  newPassword,
   logout,
   getCurrentUser,
-  
 };
 
 export default AuthService;

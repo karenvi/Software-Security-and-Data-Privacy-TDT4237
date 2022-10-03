@@ -12,6 +12,8 @@ from django.urls import reverse
 from django.conf import settings
 from .models import User
 from rest_framework.exceptions import AuthenticationFailed
+from django.utils.encoding import force_bytes, force_str
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -52,6 +54,24 @@ class RegisterSerializer(UserSerializer):
     def create(self, validated_data):
         user = get_user_model().objects.create_user(**validated_data)
 
+        user.is_active = False
+        user.save()
+        email = validated_data["email"]
+        email_subject = "Activate your account"
+        uid = urlsafe_base64_encode(user.username.encode())
+        domain = get_current_site(self.context["request"])
+        link = reverse('verify-email', kwargs={"uid": uid})
+
+        url = f"{settings.PROTOCOL}://{domain}{link}"
+
+        mail = EmailMessage(
+            email_subject,
+            url,
+            None,
+            [email],
+        )
+        mail.send(fail_silently=False)
+
         return user
 
     def validate(self, data):
@@ -72,3 +92,50 @@ class RegisterSerializer(UserSerializer):
             raise serializers.ValidationError(errors)
 
         return super(RegisterSerializer, self).validate(data)
+
+
+class ResetPasswordSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = get_user_model()
+        fields = ['email', "username"]
+
+
+class SetNewPasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(
+        style={"input_type": "password"}, write_only=True)
+    password1 = serializers.CharField(
+        style={"input_type": "password"}, write_only=True)
+    token = serializers.CharField(
+        min_length=1, write_only=True)
+    uid = serializers.CharField(
+        min_length=1, write_only=True)
+
+    class Meta:
+        fields = ['password', 'password1', 'token', 'uid']
+
+    def validate(self, attrs):
+        password = attrs.get('password')
+        password1 = attrs.get('password1')
+        token = attrs.get('token')
+        uid = attrs.get('uid')
+
+        id = force_str(urlsafe_base64_decode(uid))
+        user = get_user_model().objects.get(id=id)
+        errorMessage = dict()
+
+        try:
+            validate_password(password)
+        except exceptions.ValidationError as error:
+            errorMessage['message'] = list(error.messages)
+
+        if errorMessage:
+            raise serializers.ValidationError(errorMessage)
+
+        if password != password1:
+            raise serializers.ValidationError("Passwords must match!")
+
+        user.set_password(password)
+        user.save()
+
+        return user

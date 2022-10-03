@@ -59,6 +59,21 @@ const HelpRequests = ({ user }) => {
         Welcome to the Help Request page! Manage Help Requests here.
       </Typography>
 
+      {requests && !user.is_volunteer ? (
+        <Typography sx={{ textAlign: "center", marginTop: 3 }} variant='h6'>
+          You have not made any requests. Press the "New Request" button to
+          create a new request.
+        </Typography>
+      ) : null}
+
+      {user.is_volunteer ? (
+        <Typography sx={{ textAlign: "center", marginTop: 3 }} variant='h6'>
+          As a volunteer, you can view and accept requests from volunteers here.
+          You only have access to requests that are not yet accepted by others,
+          and you need to be certified for the service type of the request.
+        </Typography>
+      ) : null}
+
       <Typography sx={{ textAlign: "center", marginTop: 3 }} variant='h4'>
         Pending Requests
       </Typography>
@@ -116,16 +131,18 @@ const HelpRequests = ({ user }) => {
           ))}
       </Grid>
 
-      <Fab
-        sx={{ position: "fixed", bottom: 20, right: 20 }}
-        variant='extended'
-        color='primary'
-        aria-label='add'
-        onClick={handleModalOpen}
-      >
-        New Request
-        {<AddIcon sx={{ ml: 1 }} />}
-      </Fab>
+      {user.is_volunteer ? null : (
+        <Fab
+          sx={{ position: "fixed", bottom: 20, right: 20 }}
+          variant='extended'
+          color='primary'
+          aria-label='add'
+          onClick={handleModalOpen}
+        >
+          New Request
+          {<AddIcon sx={{ ml: 1 }} />}
+        </Fab>
+      )}
 
       <Modal open={open} onClose={handleModalClose}>
         <NewHelpRequest

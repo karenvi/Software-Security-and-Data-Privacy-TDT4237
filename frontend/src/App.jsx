@@ -8,13 +8,15 @@ import Toolbar from "@mui/material/Toolbar";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import Avatar from "@mui/material/Avatar";
-import AuthService from "./services/token";
 import LoginForm from "./components/LoginForm";
 import Home from "./components/Home";
 import SignupForm from "./components/SignupForm";
 import Certifications from "./components/Certifications";
 import ApproveCerts from "./components/ApproveCerts";
 import HelpRequests from "./components/HelpRequests";
+import ResetPassword from "./components/ResetPassword";
+import Verified from "./components/Verified";
+import Invalid from "./components/Invalid";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
@@ -81,6 +83,9 @@ const App = () => {
                 <Button color='inherit' component={Link} to='/help-requests'>
                   Help Requests
                 </Button>
+                <Button color='inherit' component={Link} to='/documents'>
+                  Documents
+                </Button>
               </Grid>
             ) : null}
           </Grid>
@@ -143,6 +148,11 @@ const App = () => {
               />
             }
           />
+
+          <Route path='/invalid' element={<Invalid />} />
+          <Route path='/verified' element={<Verified />} />
+
+          <Route path='/new_password' element={<ResetPassword />} />
 
           <Route path='/' element={<Home setUser={setUser} />} />
         </Routes>

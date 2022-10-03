@@ -45,8 +45,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 AUTH_USER_MODEL = "users.User"
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 SECRET_KEY = 'asdkjasdasd2-gmdf18+ep^k4d4)=uf%+1h$5(p5!l3-g24xb10^%5ycj9!dp37'
 
