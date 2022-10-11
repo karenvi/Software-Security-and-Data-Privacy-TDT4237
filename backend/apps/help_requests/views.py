@@ -20,7 +20,7 @@ class HelpRequestViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
 
         if self.request.user.is_staff:
-            return HelpRequest.objects.raw('SELECT * FROM help_requests_helprequest')
+            return HelpRequest.objects.all()
         elif self.request.user.is_volunteer:
             approved = []
             for c in Competence:
@@ -42,7 +42,7 @@ class HelpRequestViewSet(viewsets.ModelViewSet):
         serializer.save(refugee=self.request.user)
 
     def perform_destroy(self, instance):
-        if self.request.user != instance.refugee:
+        if self.request.user != instance.refugee and not self.request.user.is_staff:
             raise ValidationError("Can only delete own help requests")
         instance.delete()
 
@@ -90,20 +90,22 @@ class FinishHelpRequest(generics.GenericAPIView):
 
         try:  # check if id is valid
             rId = request.data.get('request_id')
-            help_request = HelpRequest.objects.raw(
-                "SELECT * FROM help_requests_helprequest WHERE id = '%s'" % rId)[0]
+            help_requests = HelpRequest.objects.raw(
+                "SELECT * FROM help_requests_helprequest WHERE id = '%s'" % rId)
+            help_request = help_requests[0]
         except:
             return Response({'error': 'Invalid id'}, status=status.HTTP_400_BAD_REQUEST)
+        if len(help_requests) == 1:
+            if help_request is None:  # check if help request exists
+                return Response({'error': 'Help Request does not exist'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if help_request is None:  # check if help request exists
-            return Response({'error': 'Help Request does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+            if help_request.finished:  # check if help request is already finished
+                return Response({'error': 'Help Request is already finished'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if help_request.finished:  # check if help request is already finished
-            return Response({'error': 'Help Request is already finished'}, status=status.HTTP_400_BAD_REQUEST)
+            if help_request.volunteer != self.request.user:  # check if help request is not taken by you
+                return Response({'error': 'Help Request is not taken by you'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if help_request.volunteer != self.request.user:  # check if help request is not taken by you
-            return Response({'error': 'Help Request is not taken by you'}, status=status.HTTP_400_BAD_REQUEST)
-
-        help_request.finished = True
-        help_request.save()
-        return Response(status=status.HTTP_200_OK)
+            help_request.finished = True
+            help_request.save()
+            return Response(status=status.HTTP_200_OK)
+        return Response(HelpRequestSerializer(help_requests, many=True).data, status=status.HTTP_200_OK)

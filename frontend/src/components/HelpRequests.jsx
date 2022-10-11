@@ -68,7 +68,7 @@ const HelpRequests = ({ user }) => {
 
       {user.is_volunteer ? (
         <Typography sx={{ textAlign: "center", marginTop: 3 }} variant='h6'>
-          As a volunteer, you can view and accept requests from volunteers here.
+          As a volunteer, you can view and accept requests from refugees here.
           You only have access to requests that are not yet accepted by others,
           and you need to be certified for the service type of the request.
         </Typography>

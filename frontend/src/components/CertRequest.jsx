@@ -47,7 +47,7 @@ const CertRequest = ({ certRequest, update, OpenSnackbar }) => {
           <Button
             size='small'
             variant='contained'
-            color='error'
+            color='secondary'
             onClick={() => AnswerRequest("D")}
           >
             Decline
@@ -55,7 +55,7 @@ const CertRequest = ({ certRequest, update, OpenSnackbar }) => {
           <Button
             size='small'
             variant='contained'
-            color='success'
+            color='primary'
             onClick={() => AnswerRequest("A")}
           >
             Accept
