@@ -34,7 +34,7 @@ services:
         - PROTOCOL=${PROTOCOL}
     command: ["/bin/bash", "entrypoint.dev.sh"]
     volumes:
-      - ./frontend:/app
+      - ./frontend/src:/app/src
     stdin_open: true
     networks:
       backend_bridge:
