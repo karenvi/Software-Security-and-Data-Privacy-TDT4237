@@ -1,0 +1,64 @@
+version: '3'
+
+services:
+
+  # Configuration for the Django server including API and database
+  backend:
+    container_name: backend_group_${GROUP_ID}
+    build:
+      context: backend/
+      dockerfile: Dockerfile
+    environment:
+      - PRODUCTION=${PRODUCTION}
+      - GROUP_ID=${GROUP_ID}
+      - PORT_PREFIX=${PORT_PREFIX}
+      - DOMAIN=${DOMAIN}
+      - PROTOCOL=${PROTOCOL}
+      - DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME}
+      - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
+      - DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL}
+    networks:
+      backend_bridge:
+        ipv4_address: 10.${GROUP_ID}.0.4
+        
+  # Configuration for the React application 
+  frontend:
+    container_name: frontend_group_${GROUP_ID}
+    build:
+      context: frontend/
+      dockerfile: Dockerfile
+      args:
+        - GROUP_ID=${GROUP_ID}
+        - PORT_PREFIX=${PORT_PREFIX}
+        - DOMAIN=${DOMAIN}
+        - PROTOCOL=${PROTOCOL}
+    command: ["/bin/bash", "entrypoint.dev.sh"]
+    volumes:
+      - ./frontend:/app
+    stdin_open: true
+    networks:
+      backend_bridge:
+        ipv4_address: 10.${GROUP_ID}.0.5
+
+  # Configuration for the NGINX reverse proxy. This module routes incoming traffic to either the frontend or backend.
+  gateway:
+    container_name: gateway_group_${GROUP_ID}
+    build:
+      context: nginx/
+      dockerfile: Dockerfile
+    ports:
+      - ${PORT_PREFIX}${GROUP_ID}:80
+    environment:
+      - GROUP_ID=${GROUP_ID}
+      - PORT_PREFIX=${PORT_PREFIX}
+    networks:
+      backend_bridge:
+        ipv4_address: 10.${GROUP_ID}.0.6
+
+# The network configuration isolates the modules within a single network and an IP based on the GROUP_ID. 
+networks:  
+  backend_bridge:
+    driver: bridge
+    ipam:
+        config:
+          - subnet: 10.${GROUP_ID}.0.0/18

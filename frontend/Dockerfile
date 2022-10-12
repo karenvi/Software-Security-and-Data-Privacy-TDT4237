@@ -40,5 +40,5 @@ RUN echo "REACT_APP_API_URL='${PROTOCOL}://${DOMAIN}:${PORT_PREFIX}${GROUP_ID}/a
 RUN dos2unix entrypoint.sh
 
 # Start app
-CMD ["/bin/bash", "entrypoint.sh"]
+#CMD ["/bin/bash", "entrypoint.sh"]
 
