@@ -42,5 +42,8 @@ RUN pip install --upgrade pip && pip install --user -r requirements.txt
 # Convert entrypoint script to unix format if PC is running windows
 RUN dos2unix entrypoint.sh
 
+# Convert entrypoint.dev script to unix format if PC is running windows
+RUN dos2unix entrypoint.dev.sh
+
 # Run the startup script
 CMD ["/bin/bash", "/app/entrypoint.sh"]

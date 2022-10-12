@@ -17,6 +17,9 @@ services:
       - DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME}
       - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
       - DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL}
+    volumes:
+      - ./backend:/app
+    command: ["/bin/bash", "entrypoint.dev.sh"]
     networks:
       backend_bridge:
         ipv4_address: 10.${GROUP_ID}.0.4
