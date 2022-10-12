@@ -39,6 +39,9 @@ RUN echo "REACT_APP_API_URL='${PROTOCOL}://${DOMAIN}:${PORT_PREFIX}${GROUP_ID}/a
 # Convert entrypoint script to unix format if PC is running windows
 RUN dos2unix entrypoint.sh
 
+# Convert entrypoint.dev script to unix format if PC is running windows
+RUN dos2unix entrypoint.dev.sh
+
 # Start app
-#CMD ["/bin/bash", "entrypoint.sh"]
+CMD ["/bin/bash", "entrypoint.sh"]
 
