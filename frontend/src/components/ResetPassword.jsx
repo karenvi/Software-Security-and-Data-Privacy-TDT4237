@@ -6,8 +6,7 @@ import Container from "@mui/material/Container";
 import AuthService from "../services/auth";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
-import Link from "@mui/material/Link";
-import { useHistory, useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;

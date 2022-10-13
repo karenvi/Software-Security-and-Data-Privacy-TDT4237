@@ -4,7 +4,7 @@ import Certification from "./Certification";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import { Container } from "@mui/material";
-const Certifications = ({ user }) => {
+const Certifications = () => {
   const [certifications, setCertifications] = useState(null);
 
   const Update = () => {

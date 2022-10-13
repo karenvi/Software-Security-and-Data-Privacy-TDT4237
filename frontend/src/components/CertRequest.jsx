@@ -6,7 +6,7 @@ import {
   Typography,
   Stack,
 } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import CertificationsService from "../services/certifications";
 
 const CertRequest = ({ certRequest, update, OpenSnackbar }) => {
