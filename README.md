@@ -52,6 +52,8 @@ Running Docker in development mode allows Docker to automatically refresh whenev
 
 - `docker-compose -f docker-compose.dev.yml up`
 
+The application will now run on: http://localhost:21XXX/ (XXX = GroupID, e.g., http://localhost:21042/).
+
 The containers will automatically refresh if changes are made in /backend, /frontend/src or /nginx/nginx.conf. Both Django and Node runs in development mode, this means that they automatically detect changes and compile the code on the fly. Meaning that there is no need to restart the containers when making changes in these directorties.
 
 However, the NGINX gateway container does not have functionality to automatically reload the configuration. This is how you should reload the NGINX configuration without restarting the containers. First your containers must be running and you can enter the gateway using Docker:
