@@ -95,7 +95,7 @@ const Documents = () => {
       <Stack marginTop={5} alignItems='center'>
         <Typography variant='h4'>Your Documents</Typography>
         <Typography variant='h6'>
-          Click the file name to download the file, and click the delete icon to
+          Click the file name to download the file, or click the delete icon to
           delete the file
         </Typography>
         <Box>

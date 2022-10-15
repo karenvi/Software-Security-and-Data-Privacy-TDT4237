@@ -61,7 +61,7 @@ const NewHelpRequest = React.forwardRef((props, ref) => {
             Select the type of help you need, and write a description.
           </Typography>
           <FormControl required fullWidth>
-            <InputLabel id='service-input-label'>Location</InputLabel>
+            <InputLabel id='service-input-label'>Service Type</InputLabel>
             <Select
               labelId='service-input-label'
               id='service-select'

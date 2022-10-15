@@ -66,7 +66,7 @@ const HelpRequests = ({ user }) => {
             Welcome to the Help Request page! Manage Help Requests here.
           </Typography>
 
-          {requests && !user.is_volunteer ? (
+          {!requests && !user.is_volunteer ? (
             <Typography sx={{ textAlign: "center", marginTop: 3 }} variant='h6'>
               You have not made any requests. Press the "New Request" button to
               create a new request.
