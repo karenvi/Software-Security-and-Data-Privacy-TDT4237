@@ -10,7 +10,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from django.conf import settings
-from .models import User
+from .models import User, Document
 from rest_framework.exceptions import AuthenticationFailed
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -139,3 +139,40 @@ class SetNewPasswordSerializer(serializers.Serializer):
         user.save()
 
         return user
+
+
+"""
+Serializer for the upload Documents.
+"""
+
+
+class DocumentPostSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Document
+        fields = ('id', 'document')
+
+
+"""
+Serializer for the download of Child files.
+"""
+
+
+class DocumentGetSerializer(serializers.ModelSerializer):
+    link = serializers.SerializerMethodField()
+    name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Document
+        fields = ('id', 'user', 'link', 'name')
+
+    def get_link(self, obj):
+        domain = get_current_site(self.context["request"])
+        link = reverse('document-download', kwargs={"pk": obj.id})
+
+        link = f"{settings.PROTOCOL}://{domain}{link}"
+        return link
+
+    def get_name(self, obj):
+        # name is stored as documents/id/filename, so splitting and selecting last item gets only the filename.
+        return obj.document.name.split('/')[-1]

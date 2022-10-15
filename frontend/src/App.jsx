@@ -17,6 +17,7 @@ import HelpRequests from "./components/HelpRequests";
 import ResetPassword from "./components/ResetPassword";
 import Verified from "./components/Verified";
 import Invalid from "./components/Invalid";
+import Documents from "./components/Documents";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
@@ -153,6 +154,8 @@ const App = () => {
           <Route path='/verified' element={<Verified />} />
 
           <Route path='/new_password' element={<ResetPassword />} />
+
+          <Route path='/documents' element={<Documents />} />
 
           <Route path='/' element={<Home setUser={setUser} />} />
         </Routes>
