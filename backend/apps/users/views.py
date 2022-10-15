@@ -192,16 +192,17 @@ class DocumentViewSet(viewsets.ModelViewSet):
 class GetDocumentsForRefugeeView(generics.GenericAPIView):
     serializer_class = DocumentGetSerializer
 
-    def get(self, request, refugeeId):
+    def get(self, request, refugee_username):
 
         user = request.user
-        refugee = get_user_model().objects.get(pk=refugeeId)
-        requests = HelpRequest.objects.filter(volunteer=user)
-        if requests.filter(refugee=refugee).exists():
-            documents = Document.objects.filter(user=refugee)
-            serializer = self.serializer_class(
-                documents, many=True, context={'request': request})
-            return Response(serializer.data, status=status.HTTP_200_OK)
+        refugee = get_user_model().objects.filter(username=refugee_username).first()
+        if refugee:
+            requests = HelpRequest.objects.filter(volunteer=user)
+            if requests.filter(refugee=refugee).exists():
+                documents = Document.objects.filter(user=refugee)
+                serializer = self.serializer_class(
+                    documents, many=True, context={'request': request})
+                return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
 

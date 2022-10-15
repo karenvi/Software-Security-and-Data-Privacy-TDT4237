@@ -24,11 +24,17 @@ const DeleteDocument = (id) => {
   return request.then((response) => response.data);
 };
 
+const GetRefugeeDocumentInfos = (id) => {
+  const request = api.get(`/refugee-documents/${id}/`);
+  return request.then((response) => response.data);
+};
+
 const DocumentService = {
   UploadDocument,
   GetDocumentInfos,
   DownloadDocument,
   DeleteDocument,
+  GetRefugeeDocumentInfos,
 };
 
 export default DocumentService;

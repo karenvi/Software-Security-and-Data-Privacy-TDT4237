@@ -5,11 +5,39 @@ import {
   Button,
   Typography,
   Stack,
+  Popover,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import HelpRequestService from "../services/helpRequests";
+import DocumentService from "../services/documents";
 
 const HelpRequest = ({ helpRequest, update, OpenSnackbar, user }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const [documents, setDocuments] = useState([]);
+
+  const handleClick = (event, refugeeId) => {
+    setAnchorEl(event.currentTarget);
+    DocumentService.GetRefugeeDocumentInfos(refugeeId)
+      .then((c) => setDocuments(c))
+      .catch((err) => console.log(err));
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
+
+  const downloadFile = (url) => {
+    DocumentService.DownloadDocument(url)
+      .then((response) => {
+        const file = new File([response], url, { type: response.type });
+        window.open(URL.createObjectURL(file));
+      })
+      .catch((error) => console.error(error));
+  };
+
   const AcceptHelpRequest = (id) => {
     HelpRequestService.AcceptHelpRequest({
       request_id: id,
@@ -71,12 +99,47 @@ const HelpRequest = ({ helpRequest, update, OpenSnackbar, user }) => {
           </Typography>
         ) : null}
 
-        {!helpRequest.finished &&
-        helpRequest.volunteer != null &&
-        user.is_volunteer ? (
-          <div>Show Refugee Documents (coming soon)</div>
-        ) : null}
-
+        <Stack alignItems='center' justifyContent='center' direction='row'>
+          {helpRequest.volunteer != null && user.is_volunteer ? (
+            <>
+              <Button
+                variant='outlined'
+                aria-describedby={id}
+                onClick={(e) => handleClick(e, helpRequest.refugee)}
+              >
+                Show Documents{" "}
+              </Button>
+              <Popover
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+              >
+                <Stack
+                  direction='column'
+                  alignItems='center'
+                  justifyContent='center'
+                >
+                  {documents.length ? (
+                    documents.map((document) => (
+                      <Button onClick={() => downloadFile(document.link)}>
+                        {document.name}
+                      </Button>
+                    ))
+                  ) : (
+                    <Typography variant='h6'>
+                      {helpRequest.refugee} has no documents
+                    </Typography>
+                  )}
+                </Stack>
+              </Popover>
+            </>
+          ) : null}
+        </Stack>
         <div
           dangerouslySetInnerHTML={{ __html: helpRequest.description }}
         ></div>
