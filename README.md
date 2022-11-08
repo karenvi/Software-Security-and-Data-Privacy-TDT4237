@@ -16,7 +16,7 @@ The following must be installed before running this application.
 - [Git](https://git-scm.com/downloads/) - Version control and production
 - [Docker Desktop](https://docs.docker.com/engine/install/) - Development and deployment (must be running)
 - [VPN](https://i.ntnu.no/wiki/-/wiki/English/Install+VPN) - Connection to NTNU servers
-- [Python >= 3.9](https://www.python.org/) - Only required for local development w/o Docker
+- [Python < 3.9](https://www.python.org/) - Only required for local development w/o Docker
 - [Node >= 16](https://nodejs.org/en/) - Only required for local development w/o Docker
 
 ---
