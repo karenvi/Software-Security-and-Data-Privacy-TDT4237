@@ -14,7 +14,7 @@ Security application for TDT4237 Spring 2023. Make sure to read this whole file 
 The following must be installed before running this application.
 
 - [Git](https://git-scm.com/downloads/) - Version control and production
-- [Docker Desktop](https://docs.docker.com/engine/install/) - Development and deployment
+- [Docker Desktop](https://docs.docker.com/engine/install/) - Development and deployment (must be running)
 - [VPN](https://i.ntnu.no/wiki/-/wiki/English/Install+VPN) - Connection to NTNU servers
 - [Python >= 3.9](https://www.python.org/) - Only required for local development w/o Docker
 - [Node >= 16](https://nodejs.org/en/) - Only required for local development w/o Docker
@@ -30,6 +30,7 @@ Gitlab relies on a few security features to be able to use their system. First, 
 - [Alternative 2: Clone with personal access tokens](https://gitlab.stud.idi.ntnu.no/-/profile/personal_access_tokens)
 
 The command below shows how to include the access token for alternative 2.
+
 `git clone https://oauth2:<YOUR-ACCESS-TOKEN> @gitlab.stud.idi.ntnu.no/tdt4237/2023/securehelp.git`
 
 You should now have the directory locally and can enter it before continuing.
