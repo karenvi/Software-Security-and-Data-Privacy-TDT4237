@@ -5,4 +5,4 @@
 # The application will watch for changes in the code.
 # This script does not run in production mode.
 
-PORT=5000 npm start
+WATCHPACK_POLLING=true PORT=5000 npm start

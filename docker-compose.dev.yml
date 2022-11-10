@@ -20,7 +20,6 @@ services:
     volumes:
       - ./backend/apps:/app/apps
       - ./backend/securehelp:/app/securehelp
-      - ./backend/db.sqlite3:/app/db.sqlite3
     command: ["/bin/bash", "entrypoint.dev.sh"]
     networks:
       backend_bridge:
