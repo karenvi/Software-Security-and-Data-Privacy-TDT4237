@@ -7,7 +7,7 @@ import {
   Stack,
   Popover,
 } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import HelpRequestService from "../services/helpRequests";
 import DocumentService from "../services/documents";
 
