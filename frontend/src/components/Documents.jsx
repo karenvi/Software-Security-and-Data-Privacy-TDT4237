@@ -101,6 +101,7 @@ const Documents = () => {
         <Box>
           {documents.map((document) => (
             <Stack
+              key={document.id}
               direction='row'
               alignItems='center'
               justifyContent='space-between'

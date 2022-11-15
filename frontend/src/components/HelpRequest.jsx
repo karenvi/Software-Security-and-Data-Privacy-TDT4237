@@ -126,7 +126,10 @@ const HelpRequest = ({ helpRequest, update, OpenSnackbar, user }) => {
                 >
                   {documents.length ? (
                     documents.map((document) => (
-                      <Button onClick={() => downloadFile(document.link)}>
+                      <Button
+                        key={document.id}
+                        onClick={() => downloadFile(document.link)}
+                      >
                         {document.name}
                       </Button>
                     ))

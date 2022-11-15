@@ -21,6 +21,9 @@ class CertificationRequestViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         try:
+            if self.request.user.is_staff:
+                raise ValidationError(
+                    "Admins can't create certification requests")
             serializer.save(user=self.request.user)
         except IntegrityError as e:
             raise ValidationError(

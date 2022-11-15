@@ -39,6 +39,8 @@ class HelpRequestViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         if self.request.user.is_volunteer:
             raise ValidationError("Volunteers can't create help requests")
+        if self.request.user.is_staff:
+            raise ValidationError("Admins can't create help requests")
         serializer.save(refugee=self.request.user)
 
     def perform_destroy(self, instance):
@@ -48,7 +50,7 @@ class HelpRequestViewSet(viewsets.ModelViewSet):
 
 
 class AcceptHelpRequest(generics.GenericAPIView):
-    permission_classes = [permissions.IsAdminUser | IsVolunteer]
+    permission_classes = [IsVolunteer]
 
     def post(self, request):
         # check if id is provided
@@ -81,7 +83,7 @@ class AcceptHelpRequest(generics.GenericAPIView):
 
 
 class FinishHelpRequest(generics.GenericAPIView):
-    permission_classes = [permissions.IsAdminUser | IsVolunteer]
+    permission_classes = [IsVolunteer]
 
     def post(self, request):
         # check if id is provided
