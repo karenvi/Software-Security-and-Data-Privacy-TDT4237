@@ -60,7 +60,7 @@ const App = () => {
                 <Avatar alt='Home' src='favicon.ico' />
               </Button>
             </Grid>
-            {user?.is_volunteer || user?.is_staff ? (
+            {user?.is_volunteer ? (
               <Grid item marginTop={0.8}>
                 <Button color='inherit' component={Link} to='/certifications'>
                   Certifications
@@ -79,7 +79,7 @@ const App = () => {
               </Grid>
             ) : null}
 
-            {user ? (
+            {user && !user?.is_staff ? (
               <Grid item marginTop={0.8}>
                 <Button color='inherit' component={Link} to='/help-requests'>
                   Help Requests

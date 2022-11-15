@@ -13,7 +13,11 @@ const Home = ({ setUser }) => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
       setUser(user);
-      navigate("/help-requests");
+      if (user.is_staff) {
+        navigate("/approve-certifications");
+      } else {
+        navigate("/help-requests");
+      }
     }
   }, [navigate, setUser]);
 
