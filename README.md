@@ -51,7 +51,7 @@ The first method is slow and the second method can be tricky and inconsistent wi
 
 Running Docker in development mode allows Docker to automatically refresh whenever you make changes to the local code. This is supposed to be the simplest way to work with the code, but will not be used to deliver the code. Use the following command to run Docker in development mode:
 
-- `docker-compose -f docker-compose.dev.yml up`
+- `docker-compose -f docker-compose.dev.yml up --build`
 
 The application will now run on: http://localhost:21XXX/ (XXX = GroupID, e.g., http://localhost:21042/).
 
