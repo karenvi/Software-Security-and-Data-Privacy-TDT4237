@@ -3,6 +3,6 @@ build-job:       # This job runs in the build stage, which runs first.
   stage: build
   script:
     - echo "Building and running docker..."
-    - DOMAIN=molde.idi.ntnu.no rootlesskit docker-compose up --build -d
+    - COMPOSE_HTTP_TIMEOUT=200 DOMAIN=molde.idi.ntnu.no rootlesskit docker-compose up --build -d
   only:
     - production
