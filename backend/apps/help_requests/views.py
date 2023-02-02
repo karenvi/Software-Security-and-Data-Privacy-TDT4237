@@ -12,12 +12,14 @@ from apps.certifications.permissions import IsVolunteer
 
 
 class HelpRequestViewSet(viewsets.ModelViewSet):
+    """Viewset for help requests"""
 
     serializer_class = HelpRequestSerializer
     permission_classes = [permissions.IsAuthenticated]
     http_method_names = ['get', 'head', 'delete', 'post']
 
     def get_queryset(self):
+        """Show own help requests if refugee, otherwise only show requests for which the user is certified and not already accepted by another volunteer"""
 
         if self.request.user.is_staff:
             return HelpRequest.objects.all()
@@ -37,6 +39,7 @@ class HelpRequestViewSet(viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
+        """Create a help request for the current user if user is refugee"""
         if self.request.user.is_volunteer:
             raise ValidationError("Volunteers can't create help requests")
         if self.request.user.is_staff:
@@ -44,12 +47,14 @@ class HelpRequestViewSet(viewsets.ModelViewSet):
         serializer.save(refugee=self.request.user)
 
     def perform_destroy(self, instance):
+        """Delete a help request"""
         if self.request.user != instance.refugee and not self.request.user.is_staff:
             raise ValidationError("Can only delete own help requests")
         instance.delete()
 
 
 class AcceptHelpRequest(generics.GenericAPIView):
+    """View for accepting a help request. Only POST method is allowed"""
     permission_classes = [IsVolunteer]
 
     def post(self, request):
@@ -83,6 +88,7 @@ class AcceptHelpRequest(generics.GenericAPIView):
 
 
 class FinishHelpRequest(generics.GenericAPIView):
+    """View for finishing a help request. Only POST method is allowed"""
     permission_classes = [IsVolunteer]
 
     def post(self, request):

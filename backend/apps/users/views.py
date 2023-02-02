@@ -24,6 +24,8 @@ from .permissions import DocumentPermission
 
 
 class UserViewSet(viewsets.ModelViewSet):
+    """ViewSet for viewing user instances"""
+
     http_method_names = ['get']
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)
@@ -37,6 +39,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class RegistrationViewSet(viewsets.ModelViewSet, TokenObtainPairView):
+    """ViewSet for registering new users"""
     serializer_class = RegisterSerializer
     permission_classes = (AllowAny,)
     http_method_names = ['post']
@@ -46,6 +49,7 @@ class RegistrationViewSet(viewsets.ModelViewSet, TokenObtainPairView):
 
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+        # Create refresh token for user using simplejwt
         refresh = RefreshToken.for_user(user)
         res = {
             "refresh": str(refresh),
@@ -60,9 +64,10 @@ class RegistrationViewSet(viewsets.ModelViewSet, TokenObtainPairView):
 
 
 class LoginViewSet(viewsets.ModelViewSet, TokenObtainPairView):
+    """ViewSet for logging in users. Extended from TokenObtainPairView"""
     serializer_class = LoginSerializer
     permission_classes = (AllowAny,)
-    http_method_names = ['post']
+    http_method_names = ['post']  # Only allow POST requests
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -76,8 +81,9 @@ class LoginViewSet(viewsets.ModelViewSet, TokenObtainPairView):
 
 
 class RefreshViewSet(viewsets.ViewSet, TokenRefreshView):
+    """ViewSet for refreshing tokens. Extended from TokenRefreshView"""
     permission_classes = (AllowAny,)
-    http_method_names = ['post']
+    http_method_names = ['post']  # Only allow POST requests
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -91,13 +97,15 @@ class RefreshViewSet(viewsets.ViewSet, TokenRefreshView):
 
 
 class VerificationView(generics.GenericAPIView):
+    """View for verifying user registration links"""
+
     def get(self, request, uid):
         verified_url = settings.URL + "/verified"
         invalid_url = settings.URL + "/invalid"
         try:
             username = urlsafe_base64_decode(uid).decode()
             user = get_user_model().objects.filter(username=username).first()
-            user.is_active = True
+            user.is_active = True  # Activate user
             user.save()
 
             return redirect(verified_url)
@@ -109,9 +117,11 @@ class VerificationView(generics.GenericAPIView):
 
 
 class PasswordResetEmailView(generics.GenericAPIView):
+    """View for sending password reset email"""
     serializer_class = ResetPasswordSerializer
 
     def post(self, request):
+        # Check if email and username are provided
         if request.data.get("email") and request.data.get("username"):
             email = request.data["email"]
             username = request.data["username"]
@@ -121,7 +131,7 @@ class PasswordResetEmailView(generics.GenericAPIView):
 
                 uid = urlsafe_base64_encode(force_bytes(user.pk))
                 domain = get_current_site(request).domain
-                token = PasswordResetTokenGenerator().make_token(user)
+                token = PasswordResetTokenGenerator().make_token(user)  # Generate token
                 link = reverse(
                     'password-reset', kwargs={"uidb64": uid, "token": token})
 
@@ -138,6 +148,8 @@ class PasswordResetEmailView(generics.GenericAPIView):
 
 
 class ResetPasswordView(generics.GenericAPIView):
+    """View for password reset redirect"""
+
     def get(self, request, uidb64, token):
 
         new_password_url = settings.URL + "/new_password"
@@ -158,6 +170,7 @@ class ResetPasswordView(generics.GenericAPIView):
 
 
 class SetNewPasswordView(generics.GenericAPIView):
+    """View for setting new password"""
     serializer_class = SetNewPasswordSerializer
 
     def post(self, request):
@@ -167,6 +180,7 @@ class SetNewPasswordView(generics.GenericAPIView):
 
 
 class DocumentViewSet(viewsets.ModelViewSet):
+    """ViewSet for the Document model"""
 
     queryset = Document.objects.all()
 
@@ -175,6 +189,7 @@ class DocumentViewSet(viewsets.ModelViewSet):
 
     http_method_names = ['get', 'head', 'post', 'delete']
 
+    # Return different serializers for different actions
     def get_serializer_class(self):
         if self.action == 'create':
             return DocumentPostSerializer
@@ -190,6 +205,7 @@ class DocumentViewSet(viewsets.ModelViewSet):
 
 
 class GetDocumentsForRefugeeView(generics.GenericAPIView):
+    """View for getting documents for a refugee, if the user is a volunteer for the refugee"""
     serializer_class = DocumentGetSerializer
 
     def get(self, request, refugee_username):
@@ -198,6 +214,7 @@ class GetDocumentsForRefugeeView(generics.GenericAPIView):
         refugee = get_user_model().objects.filter(username=refugee_username).first()
         if refugee:
             requests = HelpRequest.objects.filter(volunteer=user)
+            # Check if the user is a volunteer for the refugee
             if requests.filter(refugee=refugee).exists():
                 documents = Document.objects.filter(user=refugee)
                 serializer = self.serializer_class(
@@ -207,6 +224,7 @@ class GetDocumentsForRefugeeView(generics.GenericAPIView):
 
 
 class DocumentDownloadView(generics.GenericAPIView):
+    """View for downloading a document"""
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, pk):
@@ -218,6 +236,7 @@ class DocumentDownloadView(generics.GenericAPIView):
         owner = document.user
         requests = HelpRequest.objects.filter(volunteer=user)
         refugees = map(lambda x: x.refugee, requests)
+        # Check if the user is the owner of the document or a volunteer for the refugee
         if user == owner or owner in refugees or user.is_staff:
             response = HttpResponse(
                 document.document, content_type=document.content_type)

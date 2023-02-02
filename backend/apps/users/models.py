@@ -4,10 +4,10 @@ from django.contrib.auth.models import AbstractUser
 
 from .validators import FileValidator
 
-""" Overide user model to be able to add custom fields"""
-
 
 class User(AbstractUser):
+    """ Overide user model to be able to add custom fields"""
+
     # Is the user a volunteer or a refugee
     is_volunteer = models.BooleanField(default=False)
 
@@ -34,6 +34,7 @@ class Document(models.Model):
     # The date the document was uploaded
     date_uploaded = models.DateTimeField(auto_now_add=True)
 
+    # The content type of the document. For example: application/pdf, image/png, image/jpeg
     content_type = models.CharField(max_length=64)
 
     def __str__(self):

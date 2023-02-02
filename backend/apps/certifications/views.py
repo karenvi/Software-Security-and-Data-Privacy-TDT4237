@@ -9,21 +9,25 @@ from .permissions import IsVolunteer
 
 
 class CertificationRequestViewSet(viewsets.ModelViewSet):
-    serializer_class = CertificationRequestSerializer
+    """Viewset for certification requests"""
+    serializer_class = CertificationRequestSerializer  # use the serializer class defined in serializers.py
     permission_classes = [permissions.IsAdminUser | IsVolunteer]
 
     http_method_names = ['get', 'head', 'delete', 'post']
 
     def get_queryset(self):
+        """Only show certification requests of the current user if not admin"""
         if self.request.user.is_staff:
             return CertificationRequest.objects.all()
         return CertificationRequest.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
+        """Create a certification request for the current user if not admin"""
         try:
             if self.request.user.is_staff:
                 raise ValidationError(
                     "Admins can't create certification requests")
+            # save the certification request with the current user
             serializer.save(user=self.request.user)
         except IntegrityError as e:
             raise ValidationError(
@@ -31,6 +35,7 @@ class CertificationRequestViewSet(viewsets.ModelViewSet):
 
 
 class AnswerCertificationRequest(generics.GenericAPIView):
+    """View to answer certification requests"""
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
@@ -61,6 +66,8 @@ class AnswerCertificationRequest(generics.GenericAPIView):
 
 
 class GetCertificationStatus(generics.GenericAPIView):
+    """View to get certification status.
+    Returns a dictionary with the status of all competences."""
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):

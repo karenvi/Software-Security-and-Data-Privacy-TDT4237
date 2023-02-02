@@ -17,6 +17,7 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """Serializer for users"""
 
     class Meta:
         model = get_user_model()
@@ -25,23 +26,29 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(TokenObtainPairSerializer):
+    """Serializer for login"""
 
     def validate(self, attrs):
         data = super().validate(attrs)
 
+        # use get_token() from TokenObtainPairSerializer to get refresh token and access token
         refresh = self.get_token(self.user)
 
+        # add user data to response
         data['user'] = UserSerializer(self.user).data
+        # add refresh token to response
         data['refresh'] = str(refresh)
+        # add access token to response
         data['access'] = str(refresh.access_token)
 
         if api_settings.UPDATE_LAST_LOGIN:
             update_last_login(None, self.user)
 
-        return data
+        return data  # return response
 
 
 class RegisterSerializer(UserSerializer):
+    """Serializer for user registration"""
     password = serializers.CharField(
         max_length=128, min_length=1, write_only=True, required=True)
     email = serializers.CharField(
@@ -54,8 +61,10 @@ class RegisterSerializer(UserSerializer):
     def create(self, validated_data):
         user = get_user_model().objects.create_user(**validated_data)
 
-        user.is_active = False
+        user.is_active = False  # set user to inactive until email is verified
         user.save()
+
+        # create email to send to user
         email = validated_data["email"]
         email_subject = "Activate your account"
         uid = urlsafe_base64_encode(user.username.encode())
@@ -70,7 +79,7 @@ class RegisterSerializer(UserSerializer):
             None,
             [email],
         )
-        mail.send(fail_silently=False)
+        mail.send(fail_silently=False)  # send email to user
 
         return user
 
@@ -95,6 +104,7 @@ class RegisterSerializer(UserSerializer):
 
 
 class ResetPasswordSerializer(serializers.ModelSerializer):
+    """Serializer for password reset"""
 
     class Meta:
         model = get_user_model()
@@ -102,6 +112,8 @@ class ResetPasswordSerializer(serializers.ModelSerializer):
 
 
 class SetNewPasswordSerializer(serializers.Serializer):
+    """Serializer for setting new password"""
+
     password = serializers.CharField(
         style={"input_type": "password"}, write_only=True)
     password1 = serializers.CharField(
@@ -125,48 +137,44 @@ class SetNewPasswordSerializer(serializers.Serializer):
         errorMessage = dict()
 
         try:
+            # validate password using django's validate_password
             validate_password(password)
         except exceptions.ValidationError as error:
             errorMessage['message'] = list(error.messages)
 
-        if errorMessage:
+        if errorMessage:  # if there is an error, raise it
             raise serializers.ValidationError(errorMessage)
 
-        if password != password1:
+        if password != password1:  # check if passwords match
             raise serializers.ValidationError("Passwords must match!")
 
-        user.set_password(password)
+        user.set_password(password)  # set new password
         user.save()
 
         return user
 
 
-"""
-Serializer for the upload Documents.
-"""
-
-
 class DocumentPostSerializer(serializers.ModelSerializer):
-
+    """
+    Serializer for the upload Documents.
+    """
     class Meta:
         model = Document
         fields = ('id', 'document')
 
 
-"""
-Serializer for the download of Child files.
-"""
-
-
 class DocumentGetSerializer(serializers.ModelSerializer):
-    link = serializers.SerializerMethodField()
-    name = serializers.SerializerMethodField()
+    """
+    Serializer for the download of Documents.
+    """
+    link = serializers.SerializerMethodField()  # link to download the document
+    name = serializers.SerializerMethodField()  # name of the document
 
     class Meta:
         model = Document
         fields = ('id', 'user', 'link', 'name')
 
-    def get_link(self, obj):
+    def get_link(self, obj):  # get the link to download the document
         domain = get_current_site(self.context["request"])
         link = reverse('document-download', kwargs={"pk": obj.id})
 
