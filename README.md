@@ -25,11 +25,15 @@ The following must be installed before running this application.
 
 Gitlab relies on a few security features to be able to use their system. First, one must be connected to NTNU's VPN to perform Git interactions with the project. One thing is that it doesn't rely on password authentication when interacting using Git. Therefore one must set up SSH keys or use access tokens. 
 
-- [Alternative 1: Clone with SSH keys (recommended)](https://gitlab.stud.iie.ntnu.no/-/profile/keys)
+- [Alternative 1: Clone with SSH keys](https://gitlab.stud.iie.ntnu.no/-/profile/keys)
+
+`git clone git@gitlab.stud.idi.ntnu.no:tdt4237/2023/securehelp.git`
 
 - [Alternative 2: Clone with personal access tokens](https://gitlab.stud.idi.ntnu.no/-/profile/personal_access_tokens)
 
-The command below shows how to include the access token for alternative 2.
+`git clone https://gitlab.stud.idi.ntnu.no/tdt4237/2023/securehelp.git`
+
+Provide username and your personal access token as password when prompted. Alternatively insert YOUR-ACCESS-TOKEN in the URL as shown below.
 
 `git clone https://oauth2:<YOUR-ACCESS-TOKEN> @gitlab.stud.idi.ntnu.no/tdt4237/2023/securehelp.git`
 

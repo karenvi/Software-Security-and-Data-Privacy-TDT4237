@@ -4,7 +4,9 @@ from .models import CertificationRequest
 
 class CertificationRequestSerializer(serializers.ModelSerializer):
 
-    user = serializers.SlugRelatedField(
+    """Serializer for certification requests"""
+
+    user = serializers.SlugRelatedField(  # create a slug field for the user field. This will be used to display the username instead of the user id
         read_only=True, slug_field='username')
 
     class Meta:

@@ -3,7 +3,8 @@ from django.contrib.auth import get_user_model
 # Create your models here.
 
 
-class Competence(models.TextChoices):  # enum for competences
+class Competence(models.TextChoices):
+    """Enum for competence """
     MEDICAL = 'MEDICAL'
     TRANSPORT = 'TRANSPORT'
     FOOD = 'FOOD'
@@ -11,6 +12,7 @@ class Competence(models.TextChoices):  # enum for competences
 
 
 class Status(models.TextChoices):
+    """Enum for certification request status """
     ACCEPTED = 'A'
     DECLINED = 'D'
     PENDING = 'P'
@@ -33,4 +35,5 @@ class CertificationRequest(models.Model):
 
     @staticmethod
     def IsCertified(user, competence):
+        """Check if user is certified for a competence"""
         return CertificationRequest.objects.filter(user=user, status=Status.ACCEPTED, competence=competence).exists()
