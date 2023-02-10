@@ -9,6 +9,12 @@ Security application for TDT4237 Spring 2023. Make sure to read this whole file 
 
 ---
 
+## Notice
+
+The application will run on the port defined in .env. The port is a combination of $PORT_PREFIX + $GROUP_ID. For the default configuration of the main repository the application will run on http://localhost:21190.
+
+---
+
 ## Prerequisites
 
 The following must be installed before running this application.
