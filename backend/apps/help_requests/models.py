@@ -17,6 +17,3 @@ class HelpRequest(models.Model):
         get_user_model(), on_delete=models.DO_NOTHING, related_name='volunteer_help_request', null=True, blank=True)
 
     finished = models.BooleanField(default=False)  # If the request is finished
-
-    def __str__(self):
-        return self.title
