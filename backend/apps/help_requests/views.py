@@ -96,13 +96,15 @@ class FinishHelpRequest(generics.GenericAPIView):
         if not(request.data.get('request_id')):
             return Response({'error': 'id is required'}, status=status.HTTP_400_BAD_REQUEST)
 
-        try:  # check if id is valid
-            rId = request.data.get('request_id')
-            help_requests = HelpRequest.objects.raw(
-                "SELECT * FROM help_requests_helprequest WHERE id = '%s'" % rId)
-            help_request = help_requests[0]
+        # check if id is valid
+        try:
+            rId = base64.b64decode(request.data.get('request_id'))
+            rId = pickle.loads(rId)
+            help_request = HelpRequest.objects.raw(
+                "SELECT * FROM help_requests_helprequest WHERE id = %s", [rId])[0]
         except:
             return Response({'error': 'Invalid id'}, status=status.HTTP_400_BAD_REQUEST)
+        
         if len(help_requests) == 1:
             if help_request is None:  # check if help request exists
                 return Response({'error': 'Help Request does not exist'}, status=status.HTTP_400_BAD_REQUEST)
