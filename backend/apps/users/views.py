@@ -103,7 +103,9 @@ class VerificationView(generics.GenericAPIView):
         verified_url = settings.URL + "/verified"
         invalid_url = settings.URL + "/invalid"
         try:
-            username = urlsafe_base64_decode(uid).decode()
+            uid_hash = urlsafe_base64_decode(uid).decode()
+            username_bytes = hashlib.sha256(uid_hash.encode()).digest()
+            username = username_bytes.decode()
             user = get_user_model().objects.filter(username=username).first()
             user.is_active = True  # Activate user
             user.save()

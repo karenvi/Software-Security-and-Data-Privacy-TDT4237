@@ -14,6 +14,7 @@ from .models import User, Document
 from rest_framework.exceptions import AuthenticationFailed
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
+import hashlib
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -67,7 +68,9 @@ class RegisterSerializer(UserSerializer):
         # create email to send to user
         email = validated_data["email"]
         email_subject = "Activate your account"
-        uid = urlsafe_base64_encode(user.username.encode())
+        uid_bytes = user.username.encode()
+        uid_hash = hashlib.sha256(uid_bytes).hexdigest()
+        uid = urlsafe_base64_encode(uid_hash.encode())
         domain = get_current_site(self.context["request"])
         link = reverse('verify-email', kwargs={"uid": uid})
 
