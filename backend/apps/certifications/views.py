@@ -36,7 +36,9 @@ class CertificationRequestViewSet(viewsets.ModelViewSet):
 
 class AnswerCertificationRequest(generics.GenericAPIView):
     """View to answer certification requests"""
-    permission_classes = [permissions.IsAuthenticated]
+
+    # changed this from being authenticated to only admin users being allowed.
+    permission_classes = [permissions.IsAdminUser]
 
     def post(self, request):
 
@@ -52,14 +54,6 @@ class AnswerCertificationRequest(generics.GenericAPIView):
 
         if certification_request.status != 'P':  # check if certification request is pending
             return Response({'error': 'Certification Request is not pending'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        # Check that the user is not a volunteer, so that the user cannot approve their own requests
-        if self.request.user.is_volunteer == True:
-            return Response({'error': "You don't have the permission to accept or decline requests."}, status=status.HTTP_400_BAD_REQUEST)
-        
-        # Check that the user is not a refugee either
-        if self.request.user.is_volunteer == False & self.request.user.is_staff == False:
-            return Response({'error': "You don't have the permission to accept or decline requests."}, status=status.HTTP_400_BAD_REQUEST)
 
         state = request.data['status']
 
