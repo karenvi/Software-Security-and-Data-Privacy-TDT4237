@@ -110,7 +110,7 @@ class VerificationView(generics.GenericAPIView):
             current_time = datetime.datetime.now()
             # variable under is true if the token has not expired yet, and false if it has expired.
             # 120 seconds = 2 minutes... Could probably have a longer time, but due to testing reasons we decided on 2 minutes.
-            is_token_not_expired = (float(current_time.timestamp()) - float(timestamp)) < 120
+            is_token_not_expired = (float(current_time.timestamp()) - float(timestamp)) < 600
             if (token == generated_token) and (is_token_not_expired):
                 user.is_active = True  # Activate user
                 user.save()
