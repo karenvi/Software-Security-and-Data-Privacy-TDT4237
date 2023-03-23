@@ -105,7 +105,7 @@ class VerificationView(generics.GenericAPIView):
         try:
             username = urlsafe_base64_decode(uid).decode()
             user = get_user_model().objects.filter(username=username).first()
-            generated_token = generate_token(username)
+            generated_token = generate_token()
             if token == generated_token:
                 user.is_active = True  # Activate user
                 user.save()
