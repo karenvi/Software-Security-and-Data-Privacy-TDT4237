@@ -36,7 +36,9 @@ class CertificationRequestViewSet(viewsets.ModelViewSet):
 
 class AnswerCertificationRequest(generics.GenericAPIView):
     """View to answer certification requests"""
-    permission_classes = [permissions.IsAuthenticated]
+
+    # changed this from being authenticated to only admin users being allowed.
+    permission_classes = [permissions.IsAdminUser]
 
     def post(self, request):
 
