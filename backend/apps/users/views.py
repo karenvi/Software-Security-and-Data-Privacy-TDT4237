@@ -244,3 +244,19 @@ class DocumentDownloadView(generics.GenericAPIView):
         else:
             raise PermissionDenied(
                 {"Message": "You do not have permission to access this file."})
+
+class LogoutView(generics.GenericAPIView):
+    """View for logging user out and blacklisting tokens"""
+    print("hei")
+  
+    def post(self, request):
+        try:
+            refresh_token = request.data["refresh"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            print("helllllooooooo")
+
+            return Response(status=status.HTTP_205_RESET_CONTENT)
+        
+        except Exception as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)

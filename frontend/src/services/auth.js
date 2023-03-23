@@ -37,8 +37,11 @@ const newPassword = (data) => {
   return request.then((response) => response.data);
 };
 
-const logout = () => {
+const logout = (data) => {
   TokenService.removeUser();
+  // dette er bare tull probably, ikke sett noen andre gjøre det
+  const request = api.post(`/logout/`, data);
+  return request.then((response) => response.data);
 };
 
 const getCurrentUser = () => {
