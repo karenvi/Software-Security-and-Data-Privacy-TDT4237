@@ -38,8 +38,13 @@ const newPassword = (data) => {
 };
 
 const logout = () => {
+  const refreshToken = TokenService.getLocalRefreshToken();
+  const data = { refresh: refreshToken };
+  const request = api.post("/logout/", data);
   TokenService.removeUser();
+  return request.then((response) => response.data);
 };
+
 
 const getCurrentUser = () => {
   return JSON.parse(localStorage.getItem("user"));
