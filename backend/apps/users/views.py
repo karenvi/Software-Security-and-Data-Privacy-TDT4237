@@ -99,16 +99,18 @@ class RefreshViewSet(viewsets.ViewSet, TokenRefreshView):
 class VerificationView(generics.GenericAPIView):
     """View for verifying user registration links"""
 
-    def get(self, request, uid):
+    def get(self, request, uid, token):
         verified_url = settings.URL + "/verified"
         invalid_url = settings.URL + "/invalid"
         try:
             username = urlsafe_base64_decode(uid).decode()
             user = get_user_model().objects.filter(username=username).first()
-            user.is_active = True  # Activate user
-            user.save()
+            generated_token = generate_token(username)
+            if token == generated_token:
+                user.is_active = True  # Activate user
+                user.save()
 
-            return redirect(verified_url)
+                return redirect(verified_url)
 
         except Exception as ex:
             pass

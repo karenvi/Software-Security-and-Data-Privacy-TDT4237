@@ -13,7 +13,7 @@ router.register('api/refresh', views.RefreshViewSet, basename='refresh')
 router.register('api/documents', views.DocumentViewSet, basename='documents')
 
 urlpatterns = [*router.urls,
-               path("api/verify-email/<uid>",
+               path("api/verify-email/<uid>/<token>/",
                     views.VerificationView.as_view(), name="verify-email"),
                path("api/document-download/<int:pk>/",
                     views.DocumentDownloadView.as_view(), name="document-download"),
