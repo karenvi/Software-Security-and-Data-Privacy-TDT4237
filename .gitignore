@@ -361,7 +361,5 @@ sketch
 .history
 .ionide
 
-# Ignore private key
-nginx.key
 
 # End of https://www.toptal.com/developers/gitignore/api/django,react,node,python,visualstudiocode
