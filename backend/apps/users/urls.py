@@ -26,5 +26,5 @@ urlpatterns = [*router.urls,
                path('api/reset-password-validate/',
                     views.SetNewPasswordView.as_view(), name='password-reset-valid'),
                path('api/logout/', 
-                    views.LogoutView.as_view(), name='logout')
+                    views.LogoutView.as_view(), name='logout'),
                ]

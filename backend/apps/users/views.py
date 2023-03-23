@@ -247,14 +247,13 @@ class DocumentDownloadView(generics.GenericAPIView):
 
 class LogoutView(generics.GenericAPIView):
     """View for logging user out and blacklisting tokens"""
-    print("hei")
+    permission_classes = [permissions.IsAuthenticated]
   
     def post(self, request):
         try:
             refresh_token = request.data["refresh"]
             token = RefreshToken(refresh_token)
             token.blacklist()
-            print("helllllooooooo")
 
             return Response(status=status.HTTP_205_RESET_CONTENT)
         
