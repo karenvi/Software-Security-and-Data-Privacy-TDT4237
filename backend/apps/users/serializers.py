@@ -1,3 +1,4 @@
+from django.core.management.utils import get_random_secret_key
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.settings import api_settings
@@ -14,6 +15,10 @@ from .models import User, Document
 from rest_framework.exceptions import AuthenticationFailed
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
+import hashlib
+
+SECRET_KEY1 = get_random_secret_key()
+SECRET_KEY2 = get_random_secret_key()
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -46,6 +51,14 @@ class LoginSerializer(TokenObtainPairSerializer):
 
         return data  # return response
 
+# function that generates a token hashed to sha256, to make email urls more secure
+def generate_token():
+        sha256 = hashlib.sha256()
+
+        # Uses two secret keys to make it hard for hackers... although sha256 is not the safest
+        #option out there, nobody actually knows the next secreet key
+        sha256.update(SECRET_KEY1.encode('utf-8') + SECRET_KEY2.encode('utf-8'))
+        return sha256.hexdigest()
 
 class RegisterSerializer(UserSerializer):
     """Serializer for user registration"""
@@ -57,6 +70,7 @@ class RegisterSerializer(UserSerializer):
     class Meta:
         model = get_user_model()
         fields = ['id', 'username', 'email', 'password', 'is_volunteer']
+    
 
     def create(self, validated_data):
         user = get_user_model().objects.create_user(**validated_data)
@@ -68,8 +82,9 @@ class RegisterSerializer(UserSerializer):
         email = validated_data["email"]
         email_subject = "Activate your account"
         uid = urlsafe_base64_encode(user.username.encode())
+        token = generate_token()
         domain = get_current_site(self.context["request"])
-        link = reverse('verify-email', kwargs={"uid": uid})
+        link = reverse('verify-email', kwargs={"uid": uid, "token": token})
 
         url = f"{settings.PROTOCOL}://{domain}{link}"
 
