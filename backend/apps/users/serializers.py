@@ -1,3 +1,4 @@
+import datetime
 from django.core.management.utils import get_random_secret_key
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -84,7 +85,8 @@ class RegisterSerializer(UserSerializer):
         uid = urlsafe_base64_encode(user.username.encode())
         token = generate_token()
         domain = get_current_site(self.context["request"])
-        link = reverse('verify-email', kwargs={"uid": uid, "token": token})
+        current_time = datetime.datetime.now()
+        link = reverse('verify-email', kwargs={"uid": uid, "token": token, "timestamp": current_time.timestamp()})
 
         url = f"{settings.PROTOCOL}://{domain}{link}"
 

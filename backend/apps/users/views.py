@@ -21,6 +21,7 @@ from django.http import HttpResponse, HttpResponseNotFound
 from django.core.exceptions import PermissionDenied
 from apps.help_requests.models import HelpRequest
 from .permissions import DocumentPermission
+import datetime
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -99,14 +100,18 @@ class RefreshViewSet(viewsets.ViewSet, TokenRefreshView):
 class VerificationView(generics.GenericAPIView):
     """View for verifying user registration links"""
 
-    def get(self, request, uid, token):
+    def get(self, request, uid, token, timestamp):
         verified_url = settings.URL + "/verified"
         invalid_url = settings.URL + "/invalid"
         try:
             username = urlsafe_base64_decode(uid).decode()
             user = get_user_model().objects.filter(username=username).first()
             generated_token = generate_token()
-            if token == generated_token:
+            current_time = datetime.datetime.now()
+            # variable under is true if the token has not expired yet, and false if it has expired.
+            # 120 seconds = 2 minutes... Could probably have a longer time, but due to testing reasons we decided on 2 minutes.
+            is_token_not_expired = (float(current_time.timestamp()) - float(timestamp)) < 120
+            if (token == generated_token) and (is_token_not_expired):
                 user.is_active = True  # Activate user
                 user.save()
 
